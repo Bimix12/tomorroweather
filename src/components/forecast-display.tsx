@@ -1,9 +1,9 @@
 'use client';
 
-import type { DailyForecast } from '@/lib/weather';
+import type { DailyForecast } from '../lib/weather';
 import Image from 'next/image';
-import { Card, CardContent } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
+import { Card, CardContent } from './ui/card';
+import { Separator } from './ui/separator';
 
 export function ForecastDisplay({ forecast }: { forecast: DailyForecast[] }) {
     if (!forecast || forecast.length === 0) return null;
