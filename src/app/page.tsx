@@ -1,5 +1,5 @@
 import { CloudSun } from 'lucide-react';
-import { WeatherMap } from '@/components/weather-map';
+import { WeatherMap } from '../components/weather-map';
 
 export default function Home() {
   return (
