@@ -1,17 +1,17 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import type { FullWeatherData } from '@/lib/weather';
-import { getWeatherForCity } from '@/app/actions';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import type { FullWeatherData } from '../lib/weather';
+import { getWeatherForCity } from '../app/actions';
+import { Card, CardContent, CardHeader } from './ui/card';
+import { Input } from './ui/input';
+import { Button } from './ui/button';
 import { Search, Globe, Loader2, AlertCircle, Star } from 'lucide-react';
-import { WeatherCard } from '@/components/weather-card';
-import { Separator } from '@/components/ui/separator';
-import { Skeleton } from '@/components/ui/skeleton';
+import { WeatherCard } from './weather-card';
+import { Separator } from './ui/separator';
+import { Skeleton } from './ui/skeleton';
 import Image from 'next/image';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from './ui/carousel';
 import { ForecastDisplay } from './forecast-display';
 
 const FEATURED_CITIES = ['Tokyo', 'Paris', 'London', 'New York', 'Dubai', 'Rome', 'Singapore', 'Barcelona', 'Los Angeles', 'Sydney', 'Istanbul', 'Bangkok', 'Amsterdam', 'Prague', 'Seoul', 'Hong Kong', 'Cairo', 'Rio de Janeiro', 'Moscow', 'Berlin', 'Toronto', 'San Francisco', 'Las Vegas', 'Madrid', 'Chicago', 'Vienna', 'Shanghai', 'Mexico City', 'Mumbai', 'Buenos Aires'];
