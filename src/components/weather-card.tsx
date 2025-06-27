@@ -1,7 +1,7 @@
 'use client';
 
-import type { CurrentWeatherData } from '@/lib/weather';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import type { CurrentWeatherData } from '../lib/weather';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Droplets, Wind } from 'lucide-react';
 import Image from 'next/image';
 
