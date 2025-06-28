@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import type { FullWeatherData } from '../lib/weather';
 import { getWeatherForCity } from '../app/actions';
 import { Card, CardContent, CardHeader } from './ui/card';
@@ -9,14 +9,11 @@ import { Button } from './ui/button';
 import { Search, Globe, Loader2, AlertCircle, Star } from 'lucide-react';
 import { WeatherCard } from './weather-card';
 import { Separator } from './ui/separator';
-import { Skeleton } from './ui/skeleton';
 import Image from 'next/image';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from './ui/carousel';
 import { ForecastDisplay } from './forecast-display';
 
-const FEATURED_CITIES = ['Tokyo', 'Paris', 'London', 'New York', 'Dubai', 'Rome', 'Singapore', 'Barcelona', 'Los Angeles', 'Sydney', 'Istanbul', 'Bangkok', 'Amsterdam', 'Prague', 'Seoul', 'Hong Kong', 'Cairo', 'Rio de Janeiro', 'Moscow', 'Berlin', 'Toronto', 'San Francisco', 'Las Vegas', 'Madrid', 'Chicago', 'Vienna', 'Shanghai', 'Mexico City', 'Mumbai', 'Buenos Aires'];
-
-export function WeatherMap() {
+export function WeatherMap({ initialFeaturedCities }: { initialFeaturedCities: FullWeatherData[] }) {
   const [displayWeather, setDisplayWeather] = useState<FullWeatherData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -24,8 +21,7 @@ export function WeatherMap() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
   
-  const [featuredCities, setFeaturedCities] = useState<(FullWeatherData | null)[]>([]);
-  const [isLoadingFeatured, setIsLoadingFeatured] = useState(false);
+  const [featuredCities, setFeaturedCities] = useState<(FullWeatherData | null)[]>(initialFeaturedCities);
   
   const fetchWeatherByGeolocation = useCallback(() => {
     setIsLoading(true);
@@ -71,56 +67,33 @@ export function WeatherMap() {
     );
   }, []);
   
-  useEffect(() => {
-    const fetchFeaturedCities = async (initialLoad = false) => {
-        if (initialLoad) setIsLoadingFeatured(true);
-        const weatherPromises = FEATURED_CITIES.map(city => 
-            getWeatherForCity(city).catch(err => {
-                console.error(`Failed to fetch weather for ${city}:`, err);
-                return null;
-            })
-        );
-        const results = await Promise.all(weatherPromises);
-        const newResults = results.filter(Boolean) as FullWeatherData[];
-        if (newResults.length > 0) {
-            setFeaturedCities(newResults);
-        }
-        if (initialLoad) setIsLoadingFeatured(false);
-    };
-
-    fetchFeaturedCities(true);
-    const intervalId = setInterval(() => fetchFeaturedCities(false), 3600 * 1000);
-
-    return () => clearInterval(intervalId);
-  }, []);
-  
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!searchQuery.trim()) return;
-    
+  const fetchAndDisplayWeather = async (city: string) => {
+    if (!city) return;
     setIsSearching(true);
     setIsLoading(true);
     setError(null);
     
     try {
-      const weather = await getWeatherForCity(searchQuery);
+      const weather = await getWeatherForCity(city);
       setDisplayWeather(weather);
       setError(null);
     } catch(err: any) {
-      setError(err.message || 'Could not fetch weather for the specified location.');
+      setError(err.message || `Could not fetch weather for "${city}".`);
       setDisplayWeather(null);
     } finally {
       setIsSearching(false);
       setIsLoading(false);
     }
   };
+  
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    fetchAndDisplayWeather(searchQuery.trim());
+  };
 
   const handleFeaturedCityClick = (city: string) => {
     setSearchQuery(city);
-    const form = document.getElementById('search-form') as HTMLFormElement;
-    if (form) {
-        form.requestSubmit();
-    }
+    fetchAndDisplayWeather(city);
   };
 
   const renderMainDisplay = () => {
@@ -196,24 +169,13 @@ export function WeatherMap() {
         </div>
 
         <Separator />
-
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold flex items-center gap-2">
-            <Star className="w-5 h-5 text-accent" />
-            <span>Featured Cities</span>
-          </h3>
-          {isLoadingFeatured ? (
-            <div className="flex space-x-2 overflow-hidden p-1">
-              {Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="w-1/2 md:w-1/4 flex-shrink-0">
-                  <Card className="p-3 h-full">
-                    <Skeleton className="h-5 w-3/4 mb-2" />
-                    <Skeleton className="h-8 w-1/2" />
-                  </Card>
-                </div>
-              ))}
-            </div>
-          ) : (
+        
+        {featuredCities && featuredCities.length > 0 && (
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold flex items-center gap-2">
+              <Star className="w-5 h-5 text-accent" />
+              <span>Featured Cities</span>
+            </h3>
             <Carousel
               opts={{ align: "start", loop: false }}
               className="w-full"
@@ -240,8 +202,8 @@ export function WeatherMap() {
               <CarouselPrevious className="hidden sm:flex" />
               <CarouselNext className="hidden sm:flex" />
             </Carousel>
-          )}
-        </div>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
