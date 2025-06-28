@@ -25,7 +25,7 @@ export function WeatherMap() {
   const [isSearching, setIsSearching] = useState(false);
   
   const [featuredCities, setFeaturedCities] = useState<(FullWeatherData | null)[]>([]);
-  const [isLoadingFeatured, setIsLoadingFeatured] = useState(true);
+  const [isLoadingFeatured, setIsLoadingFeatured] = useState(false);
   
   const fetchWeatherByGeolocation = useCallback(() => {
     setIsLoading(true);
@@ -52,10 +52,18 @@ export function WeatherMap() {
       },
       (geoError) => {
         console.error("Geolocation error:", geoError);
-        let errorMessage = "Location access was denied. Please enable it in your browser settings and refresh.";
-        if (geoError.code === geoError.POSITION_UNAVAILABLE) errorMessage = "Your location is currently unavailable.";
-        else if (geoError.code === geoError.TIMEOUT) errorMessage = "Request for your location timed out.";
-        
+        let errorMessage = "An unknown error occurred while trying to get your location.";
+        switch (geoError.code) {
+            case geoError.PERMISSION_DENIED:
+                errorMessage = "Location access was denied. Please check your browser and system settings to allow location access for this site, then refresh the page.";
+                break;
+            case geoError.POSITION_UNAVAILABLE:
+                errorMessage = "Your location information is currently unavailable. Please try again later or use the search bar.";
+                break;
+            case geoError.TIMEOUT:
+                errorMessage = "The request to get your location timed out. Please try again.";
+                break;
+        }
         setError(errorMessage);
         setDisplayWeather(null);
         setIsLoading(false);
