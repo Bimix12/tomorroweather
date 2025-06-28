@@ -79,7 +79,7 @@ export function WeatherMap() {
         if (newResults.length > 0) {
             setFeaturedCities(newResults);
         }
-        if (initialLoad) setIsLoadingFeatured(false);
+        if (initialLoad) setIsLoadingFeatured(true);
     };
 
     fetchFeaturedCities(true);
