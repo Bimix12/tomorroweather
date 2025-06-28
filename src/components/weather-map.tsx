@@ -64,6 +64,8 @@ export function WeatherMap() {
   }, []);
   
   useEffect(() => {
+    // fetchWeatherByGeolocation(); // Removed to prevent automatic fetch on load.
+    
     const fetchFeaturedCities = async (initialLoad = false) => {
         if (initialLoad) setIsLoadingFeatured(true);
         const weatherPromises = FEATURED_CITIES.map(city => 
@@ -84,7 +86,7 @@ export function WeatherMap() {
     const intervalId = setInterval(() => fetchFeaturedCities(false), 3600 * 1000);
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [/* fetchWeatherByGeolocation */]); // Removed dependency
   
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -166,7 +168,7 @@ export function WeatherMap() {
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input 
                     id="city-search"
-                    placeholder="e.g. Meknes, Paris, New York..."
+                    placeholder="Search for a city..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     disabled={isSearching || isLoading}
