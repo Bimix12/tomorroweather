@@ -64,8 +64,6 @@ export function WeatherMap() {
   }, []);
   
   useEffect(() => {
-    // fetchWeatherByGeolocation(); // Removed to prevent automatic fetch on load.
-    
     const fetchFeaturedCities = async (initialLoad = false) => {
         if (initialLoad) setIsLoadingFeatured(true);
         const weatherPromises = FEATURED_CITIES.map(city => 
@@ -79,14 +77,14 @@ export function WeatherMap() {
         if (newResults.length > 0) {
             setFeaturedCities(newResults);
         }
-        if (initialLoad) setIsLoadingFeatured(true);
+        if (initialLoad) setIsLoadingFeatured(false);
     };
 
     fetchFeaturedCities(true);
     const intervalId = setInterval(() => fetchFeaturedCities(false), 3600 * 1000);
 
     return () => clearInterval(intervalId);
-  }, [/* fetchWeatherByGeolocation */]); // Removed dependency
+  }, []);
   
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
