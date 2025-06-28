@@ -1,9 +1,25 @@
 import { CloudSun, AlertTriangle } from 'lucide-react';
 import { WeatherMap } from '../components/weather-map';
 import { Card, CardContent } from '../components/ui/card';
+import { getWeatherForCity } from './actions';
+import type { FullWeatherData } from '../lib/weather';
 
-export default function Home() {
+const FEATURED_CITIES = ['Tokyo', 'Paris', 'London', 'New York', 'Dubai', 'Rome', 'Singapore', 'Barcelona', 'Los Angeles', 'Sydney', 'Istanbul', 'Bangkok', 'Amsterdam', 'Prague', 'Seoul', 'Hong Kong', 'Cairo', 'Rio de Janeiro', 'Moscow', 'Berlin', 'Toronto', 'San Francisco', 'Las Vegas', 'Madrid', 'Chicago', 'Vienna', 'Shanghai', 'Mexico City', 'Mumbai', 'Buenos Aires'];
+
+export default async function Home() {
   const apiKey = process.env.WEATHER_API_KEY;
+  let featuredCitiesData: FullWeatherData[] = [];
+
+  if (apiKey) {
+    const weatherPromises = FEATURED_CITIES.map(city => 
+        getWeatherForCity(city).catch(err => {
+            console.error(`Server-side fetch failed for ${city}:`, err);
+            return null;
+        })
+    );
+    const results = await Promise.all(weatherPromises);
+    featuredCitiesData = results.filter(Boolean) as FullWeatherData[];
+  }
 
   const renderContent = () => {
     if (!apiKey) {
@@ -22,7 +38,7 @@ export default function Home() {
         </Card>
       );
     }
-    return <WeatherMap />;
+    return <WeatherMap initialFeaturedCities={featuredCitiesData} />;
   };
 
   return (
