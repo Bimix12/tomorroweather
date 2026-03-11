@@ -33,6 +33,10 @@ export const metadata: Metadata = {
   alternates: {
     canonical: '/',
   },
+  // Zedt lik had l'meta tag hna k-khota taniya ila 7tajitiha (kat3awn f verification)
+  other: {
+    "google-adsense-account": "ca-pub-7755083002604782"
+  }
 };
 
 export default function RootLayout({
@@ -58,13 +62,12 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         
-        {/* Google AdSense Script */}
-        <Script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7755083002604782"
+        {/* Google AdSense Code - Sta3mlna <script> 3adiya bach Google Crawler yl9aha bzzerba */}
+        <script 
+          async 
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7755083002604782" 
           crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
+        ></script>
       </head>
       <body className="font-body antialiased">
         {children}
