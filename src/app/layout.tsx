@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     template: `%s | Tomorrow Weather`,
   },
   description: 'Get accurate real-time weather forecasts and a 7-day outlook for any city in the world with Tomorrow Weather. Check temperature, humidity, wind speed, and more instantly.',
-  keywords: ['weather', 'forecast', 'weather forecast', '7-day forecast', 'global weather', 'real-time weather', 'weather today', 'temperature', 'humidity', 'wind speed'],
-  authors: [{ name: 'Tomorrow Weather', url: siteUrl }],
+  keywords:['weather', 'forecast', 'weather forecast', '7-day forecast', 'global weather', 'real-time weather', 'weather today', 'temperature', 'humidity', 'wind speed'],
+  authors:[{ name: 'Tomorrow Weather', url: siteUrl }],
   creator: 'Tomorrow Weather',
   
   openGraph: {
@@ -57,24 +57,24 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        
+        {/* Google AdSense Script */}
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7755083002604782"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
       </head>
       <body className="font-body antialiased">
         {children}
         <Toaster />
+        
+        {/* Google Analytics Script */}
         <Script
           strategy="afterInteractive"
           src="https://www.googletagmanager.com/gtag/js?id=G-LCXTWGXD5S"
         />
         <Script id="google-analytics" strategy="afterInteractive">
           {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-
-            gtag('config', 'G-LCXTWGXD5S');
-          `}
-        </Script>
-      </body>
-    </html>
-  );
-}
+            window.dataLayer = window.dataLayer ||
