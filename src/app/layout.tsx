@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     template: `%s | Tomorrow Weather`,
   },
   description: 'Get accurate real-time weather forecasts and a 7-day outlook for any city in the world with Tomorrow Weather. Check temperature, humidity, wind speed, and more instantly.',
-  keywords:['weather', 'forecast', 'weather forecast', '7-day forecast', 'global weather', 'real-time weather', 'weather today', 'temperature', 'humidity', 'wind speed'],
-  authors:[{ name: 'Tomorrow Weather', url: siteUrl }],
+  keywords: ['weather', 'forecast', 'weather forecast', '7-day forecast', 'global weather', 'real-time weather', 'weather today', 'temperature', 'humidity', 'wind speed'],
+  authors: [{ name: 'Tomorrow Weather', url: siteUrl }],
   creator: 'Tomorrow Weather',
   
   openGraph: {
@@ -33,10 +33,6 @@ export const metadata: Metadata = {
   alternates: {
     canonical: '/',
   },
-  // Zedt lik had l'meta tag hna k-khota taniya ila 7tajitiha (kat3awn f verification)
-  other: {
-    "google-adsense-account": "ca-pub-7755083002604782"
-  }
 };
 
 export default function RootLayout({
@@ -61,23 +57,24 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        
-        {/* Google AdSense Code - Sta3mlna <script> 3adiya bach Google Crawler yl9aha bzzerba */}
-        <script 
-          async 
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7755083002604782" 
-          crossOrigin="anonymous"
-        ></script>
       </head>
       <body className="font-body antialiased">
         {children}
         <Toaster />
-        
-        {/* Google Analytics Script */}
         <Script
           strategy="afterInteractive"
           src="https://www.googletagmanager.com/gtag/js?id=G-LCXTWGXD5S"
         />
         <Script id="google-analytics" strategy="afterInteractive">
           {`
-            window.dataLayer = window.dataLayer ||
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-LCXTWGXD5S');
+          `}
+        </Script>
+      </body>
+    </html>
+  );
+}
